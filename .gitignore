@@ -1,4 +1,6 @@
 objdir
 *.o
 test0
+ray0
 *.png
+*.swp

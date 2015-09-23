@@ -1,12 +1,10 @@
 #include "png_wrapper.h"
 #include <png.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 
 int main(int argc __attribute__((unused)), char** argv __attribute__((unused))) {
     //#pragma unused(argc, argv)
-    RGBPixel *pixels = malloc(256*200*sizeof(RGBPixel));
+    RGBPixel *pixels = (RGBPixel*)malloc(256*200*sizeof(RGBPixel));
     for (int y=0; y<100; ++y) {
         for (int x=0; x<256; ++x) {
             pixels[x+y*256].red = 0x00;
@@ -26,4 +24,3 @@ int main(int argc __attribute__((unused)), char** argv __attribute__((unused))) 
     free(pixels);
     return 0;
 }
-

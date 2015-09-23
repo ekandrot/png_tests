@@ -49,7 +49,7 @@ int save_png_to_file(RGBBitmap *bitmap, const char *path) {
                  PNG_FILTER_TYPE_DEFAULT);
 
     /* Initialize rows of PNG. */
-    row_pointers = png_malloc(png_ptr, bitmap->height * sizeof(png_bytep));
+    row_pointers = (png_byte **)png_malloc(png_ptr, bitmap->height * sizeof(png_bytep));
     for (size_t y = 0; y < bitmap->height; ++y) {
         row_pointers[y] = (png_bytep)bitmap->pixels + bitmap->bytewidth * y;
     }
