@@ -1,17 +1,23 @@
-CFLAGS := `pkg-config libpng --cflags` -Werror -Wpedantic -Wall -Wextra -c
+CFLAGS := `pkg-config libpng --cflags` -Werror -Wpedantic -Wall -Wextra -std=c++0x -c
 LFLAGS := `pkg-config libpng --libs` 
 OBJDIR := objdir
-LIBS_OBJS := $(addprefix $(OBJDIR)/, png_wrapper.o)
-TEST0_OBJS := $(LIBS_OBJS) $(addprefix $(OBJDIR)/, test0.o)
-RAY0_OBJS := $(LIBS_OBJS) $(addprefix $(OBJDIR)/, ray0.o)
+TEST0_OBJS := $(LIBS_OBJS) $(addprefix $(OBJDIR)/, png_wrapper.o test0.o)
+RAY0_OBJS := $(LIBS_OBJS) $(addprefix $(OBJDIR)/, png_wrapper.o world.o ray0.o)
 
-$(OBJDIR)/%.o : %.cpp
-	gcc $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
 
 all: test0 ray0
 
+$(OBJDIR)/world.o : world.cpp world.h
+	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
+
+$(OBJDIR)/png_wrapper.o : png_wrapper.cpp png_wrapper.h
+	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
+
+$(OBJDIR)/ray0.o : ray0.cpp
+	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
+
 test0: $(TEST0_OBJS)
-	gcc $(TEST0_OBJS) -o $@ $(LFLAGS)
+	g++ $(TEST0_OBJS) -o $@ $(LFLAGS)
 
 ray0: $(RAY0_OBJS)
 	g++ $(RAY0_OBJS) -o $@ $(LFLAGS)
@@ -21,10 +27,4 @@ $(LIBS_OBJS): | $(OBJDIR)
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
-
-
-.PHONY : clean
-clean:
-	rm test0 $(LIBS_OBJS)
-	rmdir $(OBJDIR)
 
