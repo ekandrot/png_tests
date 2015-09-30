@@ -29,15 +29,11 @@ ray3 screen_to_ray(double x, double y) {
 
 double srgbEncode(double c) {
     double x;
-#if 0
-    x = c;
-#else
     if (c <= 0.0031308f) {
         x = 12.92f * c;
     } else {
         x = 1.055f * powf(c, 1/2.4) - 0.055f;
     }
-#endif
     x *= 256;
     if (x<0) {
         x = 0;

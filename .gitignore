@@ -4,3 +4,4 @@ test0
 ray0
 *.png
 *.swp
+!ray0_sub4x4.png
