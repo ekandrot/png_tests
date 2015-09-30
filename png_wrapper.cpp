@@ -67,4 +67,3 @@ int save_png_to_file(RGBBitmap *bitmap, const char *path) {
     fclose(fp);
     return 0;
 }
-

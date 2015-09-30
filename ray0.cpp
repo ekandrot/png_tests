@@ -12,7 +12,7 @@
 
 #define WIDTH 512
 #define HEIGHT 512
-
+#define SUBSAMPLING 4
 
 ray3 screen_to_ray(double x, double y) {
     ray3 ray;
@@ -29,11 +29,15 @@ ray3 screen_to_ray(double x, double y) {
 
 double srgbEncode(double c) {
     double x;
+#if 0
+    x = c;
+#else
     if (c <= 0.0031308f) {
         x = 12.92f * c;
     } else {
         x = 1.055f * powf(c, 1/2.4) - 0.055f;
     }
+#endif
     x *= 256;
     if (x<0) {
         x = 0;
@@ -53,25 +57,22 @@ RGBPixel to_srgb(color4 c) {
 int main(int argc __attribute__((unused)), char** argv __attribute__((unused))) {
     //#pragma unused(argc, argv)
     world w;
-    w.add_sphere({0,0,-1}, 0.5, {1,0,0,1});
+    w.add_sphere({0,0,-1}, 0.4, {1,0,0,1});
     w.add_sphere({0.3,0.3,-1}, 0.3, {0,1,0,1});
     
     // create the bitmap and raycast to fill it
     RGBPixel *pixels = (RGBPixel*)malloc(WIDTH*HEIGHT*sizeof(RGBPixel));
     for (int y=0; y<HEIGHT; ++y) {
         for (int x=0; x<WIDTH; ++x) {
-            ray3 r0 = screen_to_ray(x+0.5, y+0.5);
-            ray3 r1 = screen_to_ray(x, y);
-            ray3 r2 = screen_to_ray(x, y+1);
-            ray3 r3 = screen_to_ray(x+1, y);
-            ray3 r4 = screen_to_ray(x+1, y+1);
-            color4 c0 = w.cast_ray(r0);
-            color4 c1 = w.cast_ray(r1);
-            color4 c2 = w.cast_ray(r2);
-            color4 c3 = w.cast_ray(r3);
-            color4 c4 = w.cast_ray(r4);
-            
-            pixels[x+y*WIDTH] = to_srgb((c0+c1+c2+c3+c4)/5);
+            color4 summingColor;
+            for (int j=0; j<=SUBSAMPLING; ++j) {
+                for (int i=0; i<=SUBSAMPLING; ++i) {
+                    ray3 r = screen_to_ray(x+(1.0/SUBSAMPLING)*i, y+(1.0/SUBSAMPLING)*j);
+                    color4 c = w.cast_ray(r);
+                    summingColor += c;
+                }
+            }
+            pixels[x+y*WIDTH] = to_srgb(summingColor/sqr(SUBSAMPLING+1));
         }
     }
     

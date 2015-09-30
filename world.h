@@ -16,8 +16,12 @@
 #define sqr(x) ((x) * (x))
 
 struct color4 {
-    color4() : r(0), g(0), b(0), a(0) {}
+    color4() : r(0), g(0), b(0), a(1) {}
     color4(double r, double g, double b, double a) : r(r), g(g), b(b), a(a) {}
+    inline color4& operator+=(const color4& rhs) {
+        r+=rhs.r; g+=rhs.g; b+=rhs.b;
+        return *this;
+    }
     double r, g, b, a;
 };
 inline color4 operator+(const color4& a, const color4& b) {
@@ -30,7 +34,14 @@ inline color4 operator/(const color4& b, double a) {
     return (1.0/a)*b;
 }
 
+
 struct coord3 {
+    coord3() : x(0), y(0), z(0) {}
+    coord3(double x, double y, double z) : x(x), y(y), z(z) {}
+    inline coord3& operator+=(const coord3& b) {
+        x+=b.x; y+=b.y; z+=b.z;
+        return *this;
+    }
     double x, y, z;
 };
 inline coord3 operator-(const coord3& a, const coord3& b) {
@@ -58,6 +69,7 @@ struct ray3 {
     coord3 origin;
     coord3 direction;
 };
+
 
 struct sphere {
     coord3 center;

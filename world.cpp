@@ -21,14 +21,14 @@ void world::add_sphere(coord3 center, double r, color4 c) {
 
 
 color4 world::cast_ray(const ray3& ray __attribute__((unused))) {
-    coord3 light = unit_vector({0,0,1});
+    coord3 light = unit_vector({0.35,0.35,1});
     double tmin = 0;
     double tmax = std::numeric_limits<double>::max();
     double tcurrent = tmax;
-    coord3 normal={1,0,0};
-    coord3 where={0,0,0};
-    color4 returnColor = {0,0,0,1};
-    bool hit = false;
+    coord3 normal;
+    coord3 where;
+    color4 returnColor;
+    bool hit(false);
     for (sphere& s : objs) {
         coord3 temp = ray.origin - s.center;
         double a = dot(ray.direction, ray.direction);
@@ -56,7 +56,7 @@ color4 world::cast_ray(const ray3& ray __attribute__((unused))) {
     }
     double phong = dot(normal, unit_vector(light-where));
     if (phong <=0) {
-        return {0.01,0.01,0.01,1};
+        return color4();
     }
-    return phong*returnColor + color4(0.01,0.01,0.01,1);
+    return phong*returnColor;
 }

@@ -13,7 +13,10 @@ $(OBJDIR)/world.o : world.cpp world.h
 $(OBJDIR)/png_wrapper.o : png_wrapper.cpp png_wrapper.h
 	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
 
-$(OBJDIR)/ray0.o : ray0.cpp
+$(OBJDIR)/test0.o : test0.cpp png_wrapper.h
+	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
+
+$(OBJDIR)/ray0.o : ray0.cpp png_wrapper.h
 	g++ $< -o $@ $(CFLAGS) $(OUTPUT_OPTIONS)
 
 test0: $(TEST0_OBJS)
